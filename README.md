@@ -4,7 +4,7 @@ Screenshot with `vim` and `bat` with onehalf-dark from https://github.com/sonph/
 
 ![Screenshot](./screenshot.png)
 
-## User parameters
+## Options
 
 Set colours:
 
@@ -24,4 +24,4 @@ Add it to your list of `tpm` plugins in `.tmux.conf`
 set -g @plugin 'ememilyly/emily-tmux'
 ```
 
-Then use `prefix + I` to fetch the plugin and source it.
+Then use `prefix + I` to install.
