@@ -7,6 +7,23 @@ get_branch() {
     git -C "${path}" rev-parse --abbrev-ref HEAD || echo
 }
 
+get_revisions() {
+    upstream=$(git -C "${path}" rev-parse --abbrev-ref --symbolic-full-name '@{u}')
+    [ -z "${upstream}" ] && return
+
+    declare -i behind
+    declare -i ahead
+    behind=$(git -C "${path}" rev-list --left-only --count "${upstream}...HEAD")
+    ahead=$(git -C "${path}" rev-list --right-only --count "${upstream}...HEAD")
+
+    out=""
+    [ $behind -gt 0 ] && out+="-${behind}"
+    [ $ahead -gt 0 ] && out+="+${ahead}"
+
+    echo "${out}"
+
+}
+
 get_changes() {
     declare -i unstaged_added=0;
     declare -i unstaged_modified=0;
@@ -17,8 +34,8 @@ get_changes() {
     declare -i staged_updated=0;
     declare -i staged_deleted=0;
 
-    for i in $(git -C "${path}" status --porcelain=v2 | awk '{print $2}'); do
-        case $i in
+    for change in $(git -C "${path}" status --porcelain=v2 | awk '{print $2}'); do
+        case $change in
             '.A') unstaged_added+=1    ;;
             '.M') unstaged_modified+=1 ;;
             '.U') unstaged_updated+=1  ;;
@@ -46,6 +63,9 @@ get_changes() {
 main() {
     branch="$(get_branch)"
     [ -n "${branch}" ] && out="${branch}" || return
+
+    revisions="$(get_revisions)"
+    [ -n "${revisions}" ] && out+=" ${revisions}"
 
     changes="$(get_changes)"
     [ -n "${changes}" ] && out+=" ${changes}"
