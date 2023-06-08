@@ -17,7 +17,7 @@ get_changes() {
     declare -i staged_updated=0;
     declare -i staged_deleted=0;
 
-    for i in $(git -C "${path}" --no-optional-locks status --porcelain=v2 | awk '{print $2}'); do
+    for i in $(git -C "${path}" status --porcelain=v2 | awk '{print $2}'); do
         case $i in
             '.A') unstaged_added+=1    ;;
             '.M') unstaged_modified+=1 ;;
@@ -40,7 +40,7 @@ get_changes() {
     [ $staged_updated -gt 0 ] && out+="#[fg=color2]${staged_updated}U "
     [ $staged_deleted -gt 0 ] && out+="#[fg=color2]${staged_deleted}D "
 
-    echo "${out%% }${reset_colour}"
+    echo "${out%% }"
 }
 
 main() {
@@ -50,7 +50,7 @@ main() {
     changes="$(get_changes)"
     [ -n "${changes}" ] && out+=" ${changes}"
 
-    echo "${out}"
+    echo "${out}${reset_colour}"
 }
 
 main
