@@ -32,7 +32,7 @@ tmux set-option -g status-interval 1
 
 # statusbar formatting
 tmux set-option -g status-left ""
-tmux set-option -g status-right "#(${battery}) %A%e %b %k:%M:%S"
+tmux set-option -g status-right "#(${battery}) %A %d/%m %H:%M:%S"
 
 # window status formatting
 tmux set-option -wg window-status-current-format "#{?window_zoomed_flag,#[fg=default bold],#[fg=default]} #{window_index} #{window_name} "
